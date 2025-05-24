@@ -3,18 +3,18 @@
 #include "avifstrategy.h"
 #include "heifstrategy.h"
 #include <QDir>
-#include <QApplication> // For processEvents, if used
-#include <QFileInfo>    // Added
-#include <QMimeData>    // Added
-#include <QUrl>         // Added
-#include <QDragEnterEvent> // Added
-#include <QDropEvent>   // Added
-#include <QDirIterator> // Added
-#include <QListWidget>  // Added (though already in .h, explicit is fine)
-#include <QAbstractItemView> // Added for ExtendedSelection
+#include <QApplication>
+#include <QFileInfo>
+#include <QMimeData>
+#include <QUrl>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QDirIterator>
+#include <QListWidget>
+#include <QAbstractItemView>
 #include <QFile>
 #include <QDebug>
-#include <QFileDialog>     // Added for file dialog
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -43,12 +43,12 @@ void MainWindow::setupUi()
     // Layout for file list label and add files button
     QHBoxLayout *fileSelectionLayout = new QHBoxLayout();
     QLabel *fileListLabel = new QLabel("Files to compress (drag & drop or add):");
-    fileSelectionLayout->addWidget(fileListLabel, 1); // Add with stretch factor
+    fileSelectionLayout->addWidget(fileListLabel, 1);
 
     selectFilesButton = new QPushButton("Add Files...", this);
     connect(selectFilesButton, &QPushButton::clicked, this, &MainWindow::onSelectFilesButtonClicked);
     fileSelectionLayout->addWidget(selectFilesButton);
-    mainLayout->addLayout(fileSelectionLayout); // Add the QHBoxLayout to the main QVBoxLayout
+    mainLayout->addLayout(fileSelectionLayout);
 
     fileListWidget = new QListWidget(this);
     fileListWidget->setSelectionMode(QAbstractItemView::NoSelection);
@@ -69,14 +69,14 @@ void MainWindow::setupUi()
     });
     mainLayout->addWidget(webpQualitySlider);
 
-    // WebP Alpha Quality Hint Slider
-    webpAlphaQualityLabel = new QLabel(QString("WebP Alpha Quality Hint: %1").arg(22)); // Default to 22
+    // WebP Alpha Quality Slider
+    webpAlphaQualityLabel = new QLabel(QString("WebP Alpha Quality: %1").arg(100)); // Default to 100
     mainLayout->addWidget(webpAlphaQualityLabel);
     webpAlphaQualitySlider = new QSlider(Qt::Horizontal, this);
     webpAlphaQualitySlider->setRange(0, 100);
-    webpAlphaQualitySlider->setValue(22);
+    webpAlphaQualitySlider->setValue(100);
     connect(webpAlphaQualitySlider, &QSlider::valueChanged, this, [this](int value) {
-        webpAlphaQualityLabel->setText(QString("WebP Alpha Quality Hint: %1").arg(value));
+        webpAlphaQualityLabel->setText(QString("WebP Alpha Quality: %1").arg(value));
     });
     mainLayout->addWidget(webpAlphaQualitySlider);
 
@@ -85,15 +85,15 @@ void MainWindow::setupUi()
     deleteOriginalCheckBox->setChecked(false); // Default to not deleting
     mainLayout->addWidget(deleteOriginalCheckBox);
 
-    progressBar = new QProgressBar(this); // This is the loading bar you requested
-    progressBar->setRange(0, 100); // Will be set to file count during processing
+    progressBar = new QProgressBar(this);
+    progressBar->setRange(0, 100);
     progressBar->setValue(0);
-    progressBar->setTextVisible(true); // Show percentage or text
+    progressBar->setTextVisible(true);
     mainLayout->addWidget(progressBar);
 
     setCentralWidget(centralWidget);
-    setWindowTitle("BytePress - WebP Batch Compressor"); // Updated title
-    resize(500, 450); // Adjusted size as slider is gone
+    setWindowTitle("BytePress - WebP Batch Compressor");
+    resize(500, 450);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -169,20 +169,18 @@ void MainWindow::onSelectFilesButtonClicked()
 
     if (!selectedFilePaths.isEmpty()) {
         for (const QString &filePath : selectedFilePaths) {
-            addFileToList(filePath); // Use existing method to add to list
+            addFileToList(filePath);
         }
     }
 }
 
 void MainWindow::processSelectedFiles()
 {
-    // QList<QListWidgetItem*> selectedItems = fileListWidget->selectedItems(); // Old: only selected
-    // New: Collect all unprocessed items from the list
+    // Collect all unprocessed items from the list
     QList<QListWidgetItem*> itemsToProcess;
     for (int i = 0; i < fileListWidget->count(); ++i) {
         QListWidgetItem *currentItem = fileListWidget->item(i);
         QString currentText = currentItem->text();
-        // Check if the item has already been processed or is currently marked as an error/unsupported
         if (!currentText.contains("Saved as WebP") &&
             !currentText.contains("WebP Error") && 
             !currentText.contains("Conversion Error") &&
@@ -191,23 +189,22 @@ void MainWindow::processSelectedFiles()
         }
     }
 
-    if (itemsToProcess.isEmpty()) { // Changed from selectedItems
-        QMessageBox::information(this, "Information", "No unprocessed files found in the queue."); // Updated message
+    if (itemsToProcess.isEmpty()) {
+        QMessageBox::information(this, "Information", "No unprocessed files found in the queue.");
         return;
     }
 
     // Get WebP quality settings from sliders
     int webpQuality = webpQualitySlider->value();
-    int webpAlphaQualityHint = webpAlphaQualitySlider->value();
+    int webpAlphaQuality = webpAlphaQualitySlider->value();
 
     progressBar->setValue(0);
-    progressBar->setMaximum(itemsToProcess.count()); // Use count of itemsToProcess
+    progressBar->setMaximum(itemsToProcess.count());
     progressBar->setFormat("%v/%m files");
     int successCount = 0;
-    // int noBenefitCount = 0; // This concept changes with WebP conversion
 
-    for (int i = 0; i < itemsToProcess.count(); ++i) { // Iterate over itemsToProcess
-        QListWidgetItem *currentItem = itemsToProcess.at(i); // Get item from itemsToProcess
+    for (int i = 0; i < itemsToProcess.count(); ++i) {
+        QListWidgetItem *currentItem = itemsToProcess.at(i);
         QString inputFilePath = currentItem->data(Qt::UserRole).toString();
         QFileInfo originalFileInfo(inputFilePath);
         QString originalFileName = originalFileInfo.fileName();
@@ -217,10 +214,10 @@ void MainWindow::processSelectedFiles()
         QApplication::processEvents(); 
 
         CompressionStrategy* strategy = getStrategyForFile(inputFilePath);
-        QString outputWebPFilePath; // Will be set by the strategy
+        QString outputWebPFilePath;
 
         if (strategy) {
-            bool processedOk = strategy->processToWebP(inputFilePath, outputWebPFilePath, webpQuality, webpAlphaQualityHint);
+            bool processedOk = strategy->processToWebP(inputFilePath, outputWebPFilePath, webpQuality, webpAlphaQuality);
             
             if (processedOk) {
                 QFileInfo finalWebPInfo(outputWebPFilePath);
@@ -259,15 +256,12 @@ void MainWindow::processSelectedFiles()
                     if (deleteOriginalCheckBox->isChecked()) {
                         if (QFile::remove(inputFilePath)) {
                             qDebug() << "Successfully deleted original file:" << inputFilePath;
-                            // Optionally, add to display text: currentItem->setText(newDisplayText + " (Original Deleted)");
                         } else {
                             qWarning() << "Failed to delete original file:" << inputFilePath;
                             QMessageBox::warning(this, "Deletion Error", QString("Could not delete original file: %1").arg(originalFileName));
                         }
                     }
 
-                    // Update UserRole data if you want to re-process or manage the WebP file later, though not strictly needed now.
-                    // currentItem->setData(Qt::UserRole, outputWebPFilePath); 
                 } else {
                     currentItem->setText(initialDisplayText + " - WebP Error (File not created or empty)");
                     QMessageBox::warning(this, "Processing Error", QString("Error creating WebP for: %1. File not found or empty.").arg(originalFileName));
@@ -284,10 +278,7 @@ void MainWindow::processSelectedFiles()
         QApplication::processEvents(); 
     }
     
-    QString summary = QString("Converted %1 of %2 file(s) to WebP.").arg(successCount).arg(itemsToProcess.count()); // Use itemsToProcess.count()
-    // if (noBenefitCount > 0) { // No longer directly applicable
-    //     summary += QString(" %1 file(s) kept original (no size benefit).").arg(noBenefitCount);
-    // }
+    QString summary = QString("Converted %1 of %2 file(s) to WebP.").arg(successCount).arg(itemsToProcess.count());
     progressBar->setFormat(summary);
     QMessageBox::information(this, "Processing Complete", summary);
 } 

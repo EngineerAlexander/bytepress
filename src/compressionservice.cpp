@@ -28,16 +28,3 @@ CompressionStrategy* CompressionService::getStrategyForFile(const QString &fileP
     qWarning() << "No suitable strategy found for file:" << filePath;
     return nullptr;
 }
-
-// The following function definition for getAvailableStrategyNames is being removed
-// as it's no longer declared in the header.
-/*
-QList<QString> CompressionService::getAvailableStrategyNames() const
-{
-    QList<QString> names;
-    for (CompressionStrategy* strategy : strategies) {
-        names.append(strategy->getStrategyName());
-    }
-    return names;
-}
-*/ 

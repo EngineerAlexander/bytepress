@@ -12,7 +12,7 @@
 #include <QSlider>
 #include <QCheckBox>
 
-// Custom class includes
+
 #include "compressionservice.h"
 #include "pngstrategy.h"
 #include "jpegstrategy.h"
@@ -20,8 +20,6 @@
 // Forward declarations for event handlers
 class QDragEnterEvent;
 class QDropEvent;
-
-// class CompressionStrategy; // Provided by included headers
 
 class MainWindow : public QMainWindow
 {
