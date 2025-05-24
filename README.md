@@ -22,6 +22,16 @@ WebP is a modern image format developed by Google that provides superior lossles
 
 BytePress helps you leverage these benefits by providing a simple way to convert your existing image assets (PNG, JPEG, etc.) into the WebP format, ready for web deployment.
 
+### Supported Input Formats for WebP Conversion
+
+BytePress currently supports converting the following image formats to WebP:
+
+*   PNG (.png)
+*   JPEG (.jpg, .jpeg)
+*   GIF (.gif) - *Note: Animated GIFs are converted to static WebP (first frame).* 
+*   AVIF (.avif)
+*   HEIF/HEIC (.heif, .heic)
+
 ## Prerequisites
 
 Before building BytePress, you need to install the following system dependencies:
@@ -54,7 +64,7 @@ Before building BytePress, you need to install the following system dependencies
     *   **For MSVC:** Install Visual Studio (e.g., Visual Studio Community Edition) with the "Desktop development with C++" workload.
     Ensure `qmake.exe` and your compiler/build tools (like `mingw32-make.exe` for MinGW or `nmake.exe` for MSVC via a Developer Command Prompt) are in your system's PATH or accessible.
 
-**Linux (General, for building outside the provided Dev Container):**
+**Linux:**
 
 *   **Build Tools:**
     ```bash
@@ -62,16 +72,12 @@ Before building BytePress, you need to install the following system dependencies
     sudo apt-get install build-essential # For Debian/Ubuntu
     # Or for Fedora:
     # sudo dnf groupinstall "C Development Tools and Libraries"
-    # Or for Alpine (as in the dev container):
-    # apk add alpine-sdk
     ```
 *   **Qt 6 Development Libraries:**
     ```bash
     sudo apt-get install qt6-base-dev qt6-tools-dev # For Debian/Ubuntu
     # Or for Fedora (package names might vary, e.g., qt6-qtbase-devel):
     # sudo dnf install qt6-qtbase-devel qt6-qttools-devel
-    # Or for Alpine (as in the dev container):
-    # apk add qt6-qtbase-dev qt6-qttools-dev qt6-qtdeclarative-dev qt6-qtsvg-dev qt6-qtimageformats-dev
     ```
 
 ## Building BytePress
@@ -82,26 +88,18 @@ Before building BytePress, you need to install the following system dependencies
     cd bytepress
     ```
 
-2.  **Create a build directory (recommended):**
-    ```bash
-    mkdir build
-    cd build
-    ```
-
-3.  **Run qmake to generate the Makefile:**
+2.  **Run qmake to generate the Makefile:**
     *   On macOS and Linux:
         ```bash
-        qmake ../bytepress.pro # If Qt6 qmake is default
-        # Or specify the path if needed, e.g., /usr/local/opt/qt@6/bin/qmake ../bytepress.pro
+        qmake # Run at project root where bytepress.pro is
+        # Or specify the path if needed, e.g., /usr/local/opt/qt@6/bin/qmake
         ```
     *   On Windows (adjust path to qmake if not in PATH):
         ```bash
-        C:\Qt\6.x.x\mingw_xx\bin\qmake.exe ..\bytepress.pro  # For MinGW
-        # or from a Developer Command Prompt for VS:
-        # C:\Qt\6.x.x\msvcxxxx_xx\bin\qmake.exe ..\bytepress.pro # For MSVC
+        C:\Qt\6.x.x\mingw_xx\bin\qmake.exe # For MinGW
         ```
 
-4.  **Compile the project:**
+3.  **Compile the project:**
     *   On macOS and Linux:
         ```bash
         make -j$(nproc) # nproc might not be available on macOS, use a number e.g., make -j4
@@ -111,22 +109,9 @@ Before building BytePress, you need to install the following system dependencies
             ```bash
             mingw32-make -j4
             ```
-        *   For MSVC (from a Developer Command Prompt for Visual Studio):
-            ```bash
-            nmake
-            ```
 
-5.  **Run the application:**
+4.  **Run the application:**
     The executable (`bytepress`, `bytepress.exe`) will be located in the `build` directory or a platform-specific subdirectory within it (e.g., `build/debug` or `build/release`).
-
-## Using the Dev Container
-
-This project includes a pre-configured Dev Container for use with VS Code and Docker. This is the recommended way for Linux-based development or for a consistent environment across platforms.
-
-1.  Ensure you have Docker Desktop and the VS Code "Dev Containers" extension installed.
-2.  Open the project folder in VS Code.
-3.  When prompted, click "Reopen in Container".
-4.  Once the container is built and VS Code is connected, you can build using the Linux instructions above from the VS Code integrated terminal.
 
 ## Contributing
 
@@ -140,4 +125,28 @@ Contributions are welcome! Please feel free to submit pull requests, create issu
 
 ## License
 
-This project is licensed under the terms of the LICENSE file. Please see the `LICENSE` file for more details (assuming you have one, if not, consider adding one like MIT or GPL).
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for the full license text.
+
+```text
+MIT License
+
+Copyright (c) [Year] [Your Name or Organization Name]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
