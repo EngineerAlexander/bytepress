@@ -28,7 +28,7 @@ BytePress currently supports converting the following image formats to WebP:
 
 *   PNG (.png)
 *   JPEG (.jpg, .jpeg)
-*   GIF (.gif) - *Note: Animated GIFs are converted to static WebP (first frame).* 
+*   GIF (.gif)
 *   AVIF (.avif)
 *   HEIF/HEIC (.heif, .heic)
 
@@ -36,8 +36,8 @@ BytePress currently supports converting the following image formats to WebP:
 
 Before building BytePress, you need to install the following system dependencies:
 
-*   **Qt 6 Development Libraries:** (Version 6.2 or newer recommended, the dev container uses 6.6.x)
-*   **A C++ Compiler:** Supporting C++17 (e.g., GCC, Clang, MSVC).
+*   **Qt 6 Development Libraries:** (Version 6.2 or newer recommended)
+*   **A C++ Compiler:** Supporting C++17 (e.g., GCC, Clang).
 *   **Make/Build Tools:** (e.g., GNU Make, nmake, jom).
 
 ### Platform-Specific Dependency Installation
@@ -56,13 +56,13 @@ Before building BytePress, you need to install the following system dependencies
 
 **Windows:**
 
-1.  **Qt 6:** Download the Qt Online Installer from the official Qt website.
+1.  **Qt 6 & MinGW Compiler:** Download the Qt Online Installer from the official Qt website.
     *   During installation, select a Qt 6 version (e.g., 6.6.x).
-    *   Choose the appropriate compiler toolchain: MinGW (for GCC-like compilation) or MSVC (for Visual Studio integration). Make sure to install the corresponding components.
-2.  **C++ Compiler & Build Tools:**
-    *   **For MinGW:** The Qt installer can provide a MinGW toolchain.
-    *   **For MSVC:** Install Visual Studio (e.g., Visual Studio Community Edition) with the "Desktop development with C++" workload.
-    Ensure `qmake.exe` and your compiler/build tools (like `mingw32-make.exe` for MinGW or `nmake.exe` for MSVC via a Developer Command Prompt) are in your system's PATH or accessible.
+    *   Under the Qt version, ensure you select the **MinGW** toolchain (e.g., "MinGW [version] 64-bit"). This will install Qt libraries pre-built for MinGW and usually includes the MinGW compiler suite itself.
+    *   Also select "Qt Creator" if you wish to use the Qt IDE.
+2.  **Build Tools:**
+    *   The MinGW compiler (g++.exe) and make utility (`mingw32-make.exe`) should be installed as part of the Qt MinGW package. You'll find them in a subdirectory like `C:\Qt\[QtVersion]\[MinGWVersion]\bin\`.
+    Ensure this directory (containing `qmake.exe`, `g++.exe`, and `mingw32-make.exe`) is added to your system's PATH environment variable for easier command-line access.
 
 **Linux:**
 
@@ -130,7 +130,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) fi
 ```text
 MIT License
 
-Copyright (c) [Year] [Your Name or Organization Name]
+Copyright (c) 2025 Alexander Bijan Ardalan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
