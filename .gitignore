@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+bin/bytepress
+
+# Qt specific
+.qmake.stash
+Makefile
+build/moc_mainwindow.cpp
+build/moc_predefs.h
+
+# Mac specific
+.DS_Store
